@@ -9,9 +9,15 @@ import Register from './pages/auth/Register'
 import CourseList from './pages/courses/CourseList'
 import CourseDetails from './pages/courses/CourseDetails'
 import CreateCourse from './pages/instructor/CreateCourse'
+import GenerateCourse from './pages/instructor/GenerateCourse'
+import GenerateQuiz from './pages/instructor/GenerateQuiz'
 
 // Dashboard pages
 import StudentDashboard from './pages/student/Dashboard'
+import MyCourses from './pages/student/MyCourses'
+import LearningPath from './pages/student/LearningPath'
+import TakeQuiz from './pages/student/TakeQuiz'
+import QuizResults from './pages/student/QuizResults'
 import InstructorDashboard from './pages/instructor/Dashboard'
 import AdminDashboard from './pages/admin/Dashboard'
 
@@ -114,6 +120,46 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/student/courses"
+        element={
+          <ProtectedRoute>
+            <RoleRoute roles={['student', 'admin']}>
+              <MyCourses />
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/courses/:courseId/learn"
+        element={
+          <ProtectedRoute>
+            <RoleRoute roles={['student', 'admin']}>
+              <LearningPath />
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/quiz/:quizId"
+        element={
+          <ProtectedRoute>
+            <RoleRoute roles={['student', 'admin']}>
+              <TakeQuiz />
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/quiz/results/:attemptId"
+        element={
+          <ProtectedRoute>
+            <RoleRoute roles={['student', 'admin']}>
+              <QuizResults />
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      />
 
       {/* Instructor routes */}
       <Route
@@ -132,6 +178,26 @@ function App() {
           <ProtectedRoute>
             <RoleRoute roles={['instructor', 'admin']}>
               <CreateCourse />
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/instructor/courses/generate"
+        element={
+          <ProtectedRoute>
+            <RoleRoute roles={['instructor', 'admin']}>
+              <GenerateCourse />
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/instructor/courses/:courseId/quiz/:moduleId"
+        element={
+          <ProtectedRoute>
+            <RoleRoute roles={['instructor', 'admin']}>
+              <GenerateQuiz />
             </RoleRoute>
           </ProtectedRoute>
         }

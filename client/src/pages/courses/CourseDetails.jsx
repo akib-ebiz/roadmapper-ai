@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useCourse, useEnrollCourse } from '../../hooks/useCourses'
 import useAuthStore from '../../stores/auth.store'
 
@@ -50,6 +50,10 @@ function CourseDetails() {
 
   const isStudent = user?.role === 'student'
   const canEnroll = isStudent && !enrollMutation.isSuccess
+  const isOwner =
+    user?.role === 'admin' ||
+    (user?.role === 'instructor' &&
+      course.instructorId?._id?.toString() === user?.id?.toString())
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -89,7 +93,15 @@ function CourseDetails() {
             </button>
           )}
           {enrollMutation.isSuccess && (
-            <p className="text-green-600 font-medium text-sm">✓ Enrolled successfully!</p>
+            <div className="space-y-2">
+              <p className="text-green-600 font-medium text-sm">✓ Enrolled successfully!</p>
+              <Link
+                to={`/student/courses/${id}/learn`}
+                className="inline-block text-sm text-blue-600 hover:underline"
+              >
+                Start learning →
+              </Link>
+            </div>
           )}
           {enrollMutation.isError && (
             <p className="text-red-500 text-sm mt-2">
@@ -117,16 +129,30 @@ function CourseDetails() {
           <div className="space-y-3">
             {course.modules?.map((mod, idx) => (
               <div key={mod._id} className="bg-white border border-gray-200 rounded-xl p-4">
-                <div className="flex items-center gap-3">
-                  <span className="w-7 h-7 rounded-full bg-blue-100 text-blue-600 text-xs font-semibold flex items-center justify-center flex-shrink-0">
-                    {idx + 1}
-                  </span>
-                  <div>
-                    <p className="font-medium text-gray-800 text-sm">{mod.title}</p>
-                    {mod.objectives?.length > 0 && (
-                      <p className="text-xs text-gray-400 mt-0.5">{mod.objectives.join(' · ')}</p>
-                    )}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="w-7 h-7 rounded-full bg-blue-100 text-blue-600 text-xs font-semibold flex items-center justify-center flex-shrink-0">
+                      {idx + 1}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="font-medium text-gray-800 text-sm">{mod.title}</p>
+                      {mod.objectives?.length > 0 && (
+                        <p className="text-xs text-gray-400 mt-0.5">{mod.objectives.join(' · ')}</p>
+                      )}
+                    </div>
                   </div>
+                  {isOwner && (
+                    mod.quizId ? (
+                      <span className="text-xs text-green-600 font-medium flex-shrink-0">✓ Quiz added</span>
+                    ) : (
+                      <Link
+                        to={`/instructor/courses/${id}/quiz/${mod._id}`}
+                        className="text-xs text-violet-600 hover:underline font-medium flex-shrink-0"
+                      >
+                        Generate Quiz →
+                      </Link>
+                    )
+                  )}
                 </div>
               </div>
             ))}

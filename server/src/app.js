@@ -49,6 +49,11 @@ app.get('/api/v1/health', (_req, res) => {
 // ─── API Routes ───────────────────────────────────────────────────
 app.use('/api/v1/auth', require('./modules/auth/auth.routes'));
 app.use('/api/v1/courses', require('./modules/courses/course.routes'));
+app.use('/api/v1/quizzes', require('./modules/quizzes/quiz.routes'));
+app.use('/api/v1/dashboard', require('./modules/dashboard/dashboard.routes'));
+app.use('/api/v1/reports', require('./modules/reports/report.routes'));
+app.use('/api/v1/student', require('./modules/student/student.routes'));
+app.use('/api/v1/admin', require('./modules/admin/admin.routes'));
 
 // ─── 404 Handler ──────────────────────────────────────────────────
 app.use(notFound);

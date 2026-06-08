@@ -9,6 +9,7 @@ const {
   publishCourse,
   enrollCourse,
 } = require('./course.controller');
+const { generateCourse } = require('./ai.controller');
 const {
   validateBody,
   validateQuery,
@@ -16,10 +17,20 @@ const {
   updateCourseSchema,
   courseQuerySchema,
 } = require('./course.validator');
+const { validateGenerateCourse } = require('../../ai/validators/generate-course.validator');
 const authMiddleware = require('../auth/auth.middleware');
 const roleMiddleware = require('../auth/role.middleware');
+const rateLimit = require('express-rate-limit');
 
 const router = Router();
+
+// Dedicated rate limiter for AI generation endpoint (10 req/min per security spec)
+const aiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  skip: () => process.env.NODE_ENV === 'test',
+  message: { success: false, message: 'Too many generation requests, please wait a moment' },
+});
 
 // ─── Public routes ────────────────────────────────────────────────
 
@@ -28,6 +39,22 @@ const router = Router();
  * Browse published courses (public)
  */
 router.get('/', validateQuery(courseQuerySchema), getCourses);
+
+// ─── AI Generation ────────────────────────────────────────────────
+
+/**
+ * POST /api/v1/courses/generate
+ * Generate course outline with Gemini — instructor only, not saved to DB here
+ * Must be BEFORE /:id to avoid "generate" being treated as an ID
+ */
+router.post(
+  '/generate',
+  authMiddleware,
+  roleMiddleware('instructor', 'admin'),
+  aiLimiter,
+  validateGenerateCourse,
+  generateCourse
+);
 
 // ─── Authenticated routes ─────────────────────────────────────────
 

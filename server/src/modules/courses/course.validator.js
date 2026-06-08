@@ -41,6 +41,8 @@ const createCourseSchema = z.object({
   thumbnail: z.string().trim().optional().default(''),
 
   modules: z.array(moduleSchema).optional().default([]),
+
+  isAiGenerated: z.boolean().optional().default(false),
 });
 
 // ─── Update course (all fields optional) ─────────────────────────

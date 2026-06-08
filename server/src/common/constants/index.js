@@ -27,9 +27,16 @@ const PAGINATION = {
 };
 
 // Quiz
+const QUIZ_DIFFICULTY = {
+  EASY: 'easy',
+  MEDIUM: 'medium',
+  HARD: 'hard',
+};
+
 const QUIZ = {
   MIN_QUESTIONS: 5,
   MAX_QUESTIONS: 20,
+  AI_GENERATED_COUNT: 5,
   OPTIONS_PER_QUESTION: 4,
   PASS_THRESHOLD: 70,
 };
@@ -39,5 +46,6 @@ module.exports = {
   COURSE_STATUS,
   DIFFICULTY,
   PAGINATION,
+  QUIZ_DIFFICULTY,
   QUIZ,
 };
