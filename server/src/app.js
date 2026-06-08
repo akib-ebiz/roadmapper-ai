@@ -48,6 +48,7 @@ app.get('/api/v1/health', (_req, res) => {
 
 // ─── API Routes ───────────────────────────────────────────────────
 app.use('/api/v1/auth', require('./modules/auth/auth.routes'));
+app.use('/api/v1/courses', require('./modules/courses/course.routes'));
 
 // ─── 404 Handler ──────────────────────────────────────────────────
 app.use(notFound);

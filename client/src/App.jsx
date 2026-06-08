@@ -5,6 +5,11 @@ import useAuthStore from './stores/auth.store'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 
+// Course pages
+import CourseList from './pages/courses/CourseList'
+import CourseDetails from './pages/courses/CourseDetails'
+import CreateCourse from './pages/instructor/CreateCourse'
+
 // Dashboard pages
 import StudentDashboard from './pages/student/Dashboard'
 import InstructorDashboard from './pages/instructor/Dashboard'
@@ -94,6 +99,10 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
+      {/* Public courses */}
+      <Route path="/courses" element={<CourseList />} />
+      <Route path="/courses/:id" element={<CourseDetails />} />
+
       {/* Student routes */}
       <Route
         path="/student/dashboard"
@@ -113,6 +122,16 @@ function App() {
           <ProtectedRoute>
             <RoleRoute roles={['instructor', 'admin']}>
               <InstructorDashboard />
+            </RoleRoute>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/instructor/courses/create"
+        element={
+          <ProtectedRoute>
+            <RoleRoute roles={['instructor', 'admin']}>
+              <CreateCourse />
             </RoleRoute>
           </ProtectedRoute>
         }
